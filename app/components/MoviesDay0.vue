@@ -75,6 +75,9 @@ import localStorage from "nativescript-localstorage";
 const SocketIO = require("nativescript-socket.io");
 const socket = SocketIO.connect("https://movietime-server.herokuapp.com/");
 
+// appSettings will be used to cache results
+const appSettings = require("tns-core-modules/application-settings");
+
 const API = "https://thelist-api.herokuapp.com/filmtimes";
 
 export default {
@@ -264,42 +267,21 @@ export default {
           }
         })
         .then(response => {
-          this.unfilteredResults = response.data;
+          // this.unfilteredResults = response.data;
           this.loading = false;
-          this.filterResults();
+          this.filterResults(response.data, this.requestImages);
         })
-        /*
-        .then(response => {
-          
-          if (typeof response.data.listings == "undefined") {
-            this.results = [];
-            this.loading = false;
-            this.error = true;
-          } else {
-            this.results = response.data.listings;
-            // set results and cinemaID to cache. localStorage does not accept arrays
-            localStorage.setItem(
-              "cachedMovies0",
-              JSON.stringify(response.data.listings)
-            );
-            localStorage.setItem("cinemaID", this.IDtoSearch);
-            this.loading = false;
-            this.error = false;
-            // data emitted to server, so server can perform movie image search
-            socket.emit("request images", { data: response.data.listings });
-          }
-        }) */
         .catch(error => {
           this.error = true;
           this.loading = false;
         });
     },
-    filterResults() {
+    filterResults(unfilteredResults, callback) {
       let longDate = new Date();
       var formattedDate = longDate.toISOString().slice(0, 10);
 
       // only include performances that match the relevant date (above)
-      let filteredPerformances = this.unfilteredResults.map(function(
+      let filteredPerformances = unfilteredResults.map(function(
         CompareWithDate
       ) {
         CompareWithDate.schedules[0].performances = CompareWithDate.schedules[0].performances.filter(
@@ -311,53 +293,29 @@ export default {
       this.results = filteredPerformances.filter(
         obj => obj.schedules[0].performances.length > 0
       );
-      this.requestImages();
+      callback();
     },
     requestImages() {
+      let movieNames = this.results.map(function(obj) {
+        return obj.name;
+      });
+      /*
       let movieNames = [];
       let arr = this.results;
       // get an array of the movie array
       for (let i = 0; i < arr.length; i++) {
         movieNames.push(arr[i].name);
       }
+      */
       // emits the movie names array to the server, so the server can search for movie posters
       socket.emit("request images", { data: movieNames });
+      //console.log("Images requested");
     },
-    /*
-    buildUrl() {
-      let d = new Date();
-      let date = d.getDate() + "." + d.getMonth() + "." + d.getFullYear();
-      // compare cinemaID and date with results in cache
-      // not comparing type, as localStorage stores as string
-      if (
-        this.IDtoSearch == localStorage.getItem("cinemaID") &&
-        date == localStorage.getItem("cachedDate")
-      ) {
-        // if the cinemaID and date match with cache, use cachedMovies
-        this.results = JSON.parse(localStorage.getItem("cachedMovies0"));
-        console.log("Cache used");
-        // the images aren't stored in localStorage, therefore a socket request is needed
-        socket.emit("request images", {
-          data: JSON.parse(localStorage.getItem("cachedMovies0"))
-        });
-        this.loading = false;
-      } else {
-        // else perform API request for movies
-        this.getMovies(API + this.IDtoSearch);
-      }
-    },
-    */
     refreshView() {
       this.$refs.listView.nativeView.refresh();
     },
     loaded() {
-      // this.buildUrl();
       this.getMovies(API);
-      socket.on("image links", data => {
-        if (typeof data != "undefined" && data != undefined) {
-          this.images = data;
-        }
-      });
     },
     flip(i) {
       if (this.showBack[i] === false) {
@@ -368,6 +326,13 @@ export default {
         this.refreshView();
       }
     }
+  },
+  mounted() {
+    socket.on("image links", data => {
+      // if (typeof data != "undefined" && data != undefined) {
+      this.images = data;
+      //  }
+    });
   }
 };
 </script>

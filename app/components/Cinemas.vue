@@ -60,12 +60,11 @@ import Vue from "nativescript-vue";
 import * as geolocation from "nativescript-geolocation";
 import { Accuracy } from "tns-core-modules/ui/enums";
 
-// re-install this!!!
-// localStorage will be used to cache results from API requests
-// import localStorage from "nativescript-localstorage";
+// appSettings will be used to cache results
+const appSettings = require("tns-core-modules/application-settings");
 
 const API = "https://thelist-api.herokuapp.com/cinemas";
-var util = require("util");
+
 export default {
   data() {
     return {
@@ -76,8 +75,8 @@ export default {
       showSearchBar: false,
       showSearchIcon: true,
       error: false,
-      lat: 51,
-      lon: 0
+      lat: Number,
+      lon: Number
     };
   },
   methods: {
@@ -91,19 +90,11 @@ export default {
         })
         .then(response => {
           this.results = response.data;
-
-          // set results to cache. localStorage does not accept arrays
-          /*
-          localStorage.setItem(
-            "cachedResults",
-            JSON.stringify(reformattedResults)
-          );
-          */
+          appSettings.setString("cachedResults", JSON.stringify(response.data));
           this.loading = false;
           this.error = false;
         })
         .catch(error => {
-          console.log("Error with coordinate search");
           console.log(error);
           this.loading = false;
           this.error = true;
@@ -122,6 +113,8 @@ export default {
     }
   },
   mounted() {
+    let d = new Date();
+    let date = d.getDate() + "." + d.getMonth() + "." + d.getFullYear();
     console.log("Finding your location");
     geolocation
       .getCurrentLocation({
@@ -134,31 +127,27 @@ export default {
         // three decimal places gives 110m accuracy
         this.lat = res.latitude.toFixed(3);
         this.lon = res.longitude.toFixed(3);
-        this.getCinemas(API);
+        // this.getCinemas(API);
 
-        /*
-        let d = new Date();
-        let date = d.getDate() + "." + d.getMonth() + "." + d.getFullYear();
-        // compare current lat, lon and date with results in cache
+        // compare lat, lon and date to those in cache
         // not comparing type, as localStorage stores as string
         if (
-          lat == localStorage.getItem("cachedLat") &&
-          lon == localStorage.getItem("cachedLon") &&
-          date == localStorage.getItem("cachedDate")
+          res.latitude.toFixed(3) == appSettings.getString("cachedLat") &&
+          res.longitude.toFixed(3) == appSettings.getString("cachedLon") &&
+          date == appSettings.getString("cachedDate")
         ) {
           // use cache if lat, lon and date match
-          this.results = JSON.parse(localStorage.getItem("cachedResults"));
+          this.results = JSON.parse(appSettings.getString("cachedResults"));
           this.loading = false;
           console.log("Cache used");
         } else {
           // else perform axios request and set new values for cache
           this.getCinemas(API);
           console.log("New axios request");
-          localStorage.setItem("cachedLat", lat);
-          localStorage.setItem("cachedLon", lon);
-          localStorage.setItem("cachedDate", date);
+          appSettings.setString("cachedLat", res.latitude.toFixed(3));
+          appSettings.setString("cachedLon", res.longitude.toFixed(3));
+          appSettings.setString("cachedDate", date);
         }
-        */
       })
       .catch(e => {
         console.log("Error finding your location", e);

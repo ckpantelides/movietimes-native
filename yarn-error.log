@@ -1,0 +1,71 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add @proplugins/nativescript-localstorage
+
+PATH: 
+  C:\Python27\;C:\Python27\Scripts;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files (x86)\Yarn\bin\;C:\ProgramData\chocolatey\bin;C:\Program Files\AdoptOpenJDK\jdk8u192-b12\bin;C:\Program Files\Java\jdk1.8.0_211\bin;C:\Android\android-sdk\tools;C:\Android\android-sdk\platform-tools;C:\Android\android-sdk\tools\bin;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\nodejs\;C:\Users\MASTER\AppData\Local\Programs\Python\Python37-32\Scripts\;C:\Users\MASTER\AppData\Local\Programs\Python\Python37-32\;C:\Users\MASTER\AppData\Local\Microsoft\WindowsApps;C:\Users\MASTER\AppData\Local\atom\bin;C:\Users\MASTER\AppData\Local\Yarn\bin;C:\Program Files\heroku\bin;C:\Users\MASTER\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\MASTER\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Users\MASTER\AppData\Roaming\npm
+
+Yarn version: 
+  1.9.2
+
+Node version: 
+  12.14.1
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@proplugins%2fnativescript-localstorage: Not found
+      at Request.params.callback [as _callback] (C:\Program Files (x86)\Yarn\lib\cli.js:64150:18)
+      at Request.self.callback (C:\Program Files (x86)\Yarn\lib\cli.js:137416:22)
+      at Request.emit (events.js:223:5)
+      at Request.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:138388:10)
+      at Request.emit (events.js:223:5)
+      at IncomingMessage.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:138310:12)
+      at Object.onceWrapper (events.js:312:28)
+      at IncomingMessage.emit (events.js:228:7)
+      at endReadableNT (_stream_readable.js:1185:12)
+      at processTicksAndRejections (internal/process/task_queues.js:81:21)
+
+npm manifest: 
+  {
+    "name": "movietimes-native",
+    "version": "1.0.0",
+    "description": "A native application built with NativeScript-Vue",
+    "author": "Christos Pantelides",
+    "license": "MIT",
+    "nativescript": {
+      "id": "org.christos.cinemalistings",
+      "templateVersion": "v2",
+      "tns-android": {
+        "version": "6.0.0"
+      },
+      "tns-ios": {
+        "version": "6.0.1"
+      }
+    },
+    "dependencies": {
+      "@nstudio/nativescript-cardview": "^1.0.0",
+      "axios": "^0.19.1",
+      "nativescript-geolocation": "^5.1.0",
+      "nativescript-localstorage": "^2.0.1",
+      "nativescript-socket.io": "^0.11.1",
+      "nativescript-vue": "^2.4.0",
+      "tns-core-modules": "^6.0.0"
+    },
+    "devDependencies": {
+      "@babel/core": "^7.0.0",
+      "@babel/preset-env": "^7.0.0",
+      "babel-loader": "^8.0.2",
+      "nativescript-dev-webpack": "^1.0.0",
+      "nativescript-vue-template-compiler": "^2.0.0",
+      "nativescript-worker-loader": "~0.9.0",
+      "node-sass": "^4.9.2",
+      "vue-loader": "^15.4.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
