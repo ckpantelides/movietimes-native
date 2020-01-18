@@ -3,9 +3,7 @@
     :is="currentComponent"
     @cinemaChosen="loadMovieTimes"
     @navigateHome="reloadCinemas"
-    @newCinemaSearch="newCinemaSearch"
     :IDtoSearch="cinemaIDprop"
-    :newLocation="newLocation"
     :cinemaName="cinemaNameProp"
   ></component>
 </template>
@@ -42,7 +40,6 @@ export default {
     return {
       currentComponent: Cinemas,
       cinemaIDprop: String,
-      newLocation: String,
       cinemaNameProp: String
     };
   },

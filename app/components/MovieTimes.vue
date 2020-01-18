@@ -1,5 +1,5 @@
 <template>
-  <Page class="movie-times" actionBarHidden="true">
+  <Page class="movie-times" actionBarHidden="true" ref="pageView">
     <StackLayout>
       <Image
         @tap="navigateHome"
@@ -60,7 +60,12 @@
         :text="cinemaName"
         horizontalAlignment="center"
       />
-      <component :is="currentComponent" :IDtoSearch="IDtoSearch"></component>
+      <ActivityIndicator :busy="loading" height="20" />
+      <component
+        v-if="unfilteredResults.length > 0"
+        :is="currentComponent"
+        v-bind:unfilteredResults="unfilteredResults"
+      ></component>
     </StackLayout>
   </Page>
 </template>
@@ -75,6 +80,10 @@ import MoviesDay3 from "../components/MoviesDay3.vue";
 import MoviesDay4 from "../components/MoviesDay4.vue";
 import MoviesDay5 from "../components/MoviesDay5.vue";
 import MoviesDay6 from "../components/MoviesDay6.vue";
+import MoviesDayBlank from "../components/MoviesDayBlank.vue";
+
+const API = "https://thelist-api.herokuapp.com/filmtimesapp";
+// const API = "http://localhost:8000/filmtimesapp";
 
 export default {
   name: "MovieTimes",
@@ -89,20 +98,19 @@ export default {
     MoviesDay3,
     MoviesDay4,
     MoviesDay5,
-    MoviesDay6
+    MoviesDay6,
+    MoviesDayBlank
   },
   data: function() {
     return {
-      currentComponent: MoviesDay0,
+      currentComponent: MoviesDayBlank,
       // Boolean for the styling/underlining of "Today"
-      componentOpenedFirstTime: true
+      componentOpenedFirstTime: true,
+      loading: true,
+      unfilteredResults: []
     };
   },
   methods: {
-    chooseMoviesDay(chosenComponent) {
-      this.currentComponent = chosenComponent;
-      this.componentOpenedFirstTime = false;
-    },
     navigateHome() {
       this.$emit("navigateHome");
     },
@@ -126,7 +134,37 @@ export default {
         "Saturday"
       ];
       return days[daysAfter];
+    },
+    getMovies(url) {
+      axios
+        .get(url, {
+          params: {
+            cinemaID: this.IDtoSearch
+          }
+        })
+        .then(response => {
+          this.loading = false;
+          this.unfilteredResults = response.data;
+          // console.log(response.data);
+          this.currentComponent = MoviesDay0;
+        })
+        .catch(error => {
+          this.error = true;
+          console.log("Error with film times request");
+          this.loading = false;
+        });
+    },
+    chooseMoviesDay(chosenComponent) {
+      this.currentComponent = chosenComponent;
+      this.componentOpenedFirstTime = false;
+      this.refreshView;
+    },
+    refreshView() {
+      this.$refs.pageView.nativeView.refresh();
     }
+  },
+  mounted() {
+    this.getMovies(API);
   }
 };
 </script>
