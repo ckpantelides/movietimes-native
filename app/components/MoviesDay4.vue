@@ -1,8 +1,7 @@
 <template>
   <ListView
-    v-if="results.length > 0"
     ref="listView"
-    @loaded="loaded"
+    v-if="results.length > 0"
     for="(result, index) in results"
     height="100%"
   >
@@ -37,7 +36,7 @@
           <StackLayout :class="['back', { active: showBack[index] === true }]">
             <Label
               class="cardContent"
-              :text="images[index].blurb"
+              :text="result.description"
               textWrap="true"
             />
           </StackLayout>
@@ -66,128 +65,97 @@ export default {
     return {
       images: [
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         },
         {
-          poster: "~/assets/images/placeholder.png",
-          blurb: "Description loading..."
+          poster: "~/assets/images/placeholder.png"
         }
       ],
       showBack: [
@@ -226,20 +194,24 @@ export default {
       results: Array
     };
   },
-  watch: {},
+  watch: {
+    images: function() {
+      this.$refs.listView.refresh();
+    }
+  },
   methods: {
     requestImages() {
-      let movieNames = this.results.map(function(obj) {
-        return obj.name;
-      });
+      let movieNames = [];
+      let arr = this.results;
+      // get an array of the movie array
+      for (let i = 0; i < arr.length; i++) {
+        movieNames.push(arr[i].name);
+      }
       // emits the movie names array to the server, so the server can search for movie posters
       socket.emit("request images", { data: movieNames });
     },
     refreshView() {
-      this.$refs.listView.nativeView.refresh();
-    },
-    loaded() {
-      this.requestImages;
+      this.$refs.listView.refresh();
     },
     flip(i) {
       if (this.showBack[i] === false) {
@@ -251,13 +223,16 @@ export default {
       }
     }
   },
-  mounted() {
+  beforeMount() {
     this.results = this.unfilteredResults[4];
     socket.on("image links", data => {
-      // if (typeof data != "undefined" && data != undefined) {
-      this.images = data;
-      //  }
+      if (typeof data != "undefined" && data != undefined) {
+        this.images = data;
+      }
     });
+  },
+  mounted() {
+    this.requestImages();
   }
 };
 </script>

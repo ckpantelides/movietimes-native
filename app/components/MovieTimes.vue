@@ -145,8 +145,11 @@ export default {
         .then(response => {
           this.loading = false;
           this.unfilteredResults = response.data;
-          // console.log(response.data);
-          this.currentComponent = MoviesDay0;
+          console.log(response.data[1][0]);
+
+          if (response.data.length > 0) {
+            this.currentComponent = MoviesDay0;
+          }
         })
         .catch(error => {
           this.error = true;
