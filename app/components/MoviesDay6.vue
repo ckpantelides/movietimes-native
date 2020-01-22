@@ -1,49 +1,66 @@
 <template>
-  <ListView
-    ref="listView"
-    v-if="results.length > 0"
-    for="(result, index) in results"
-    height="100%"
-  >
-    <v-template>
-      <card-view
-        @tap="flip(index)"
-        class="cardStyle"
-        margin="10"
-        elevation="40"
-        radius="1"
-        height="200"
-      >
-        <StackLayout>
-          <StackLayout :class="['front', { active: showBack[index] === true }]">
-            <StackLayout orientation="horizontal">
-              <Image :src="images[index].poster" stretch="aspectFill"></Image>
-              <Label class="cardContent" :text="result.name" textWrap="true" />
-            </StackLayout>
-            <ScrollView class="footer" orientation="horizontal">
-              <StackLayout
-                orientation="horizontal"
-                horizontalAlignment="center"
-              >
+  <StackLayout>
+    <Label v-if="noFilms" class="error" text="I couldn't find any films" />
+    <Label
+      v-if="noFilms"
+      class="error"
+      text="Try a different day or another cinema"
+    />
+
+    <ListView
+      ref="listView"
+      v-if="results.length > 0"
+      for="(result, index) in results"
+      height="100%"
+    >
+      <v-template>
+        <card-view
+          @tap="flip(index)"
+          class="cardStyle"
+          margin="10"
+          elevation="40"
+          radius="1"
+          height="200"
+        >
+          <StackLayout>
+            <StackLayout
+              :class="['front', { active: showBack[index] === true }]"
+            >
+              <StackLayout orientation="horizontal">
+                <Image :src="images[index].poster" stretch="aspectFill"></Image>
                 <Label
-                  class="times"
-                  v-for="el in result.times"
-                  :text="`${el.ts.slice(11, 16)}`"
+                  class="cardContent"
+                  :text="result.name"
+                  textWrap="true"
                 />
               </StackLayout>
-            </ScrollView>
+              <ScrollView class="footer" orientation="horizontal">
+                <StackLayout
+                  orientation="horizontal"
+                  horizontalAlignment="center"
+                >
+                  <Label
+                    class="times"
+                    v-for="el in result.times"
+                    :text="`${el.ts.slice(11, 16)}`"
+                  />
+                </StackLayout>
+              </ScrollView>
+            </StackLayout>
+            <StackLayout
+              :class="['back', { active: showBack[index] === true }]"
+            >
+              <Label
+                class="cardContent"
+                :text="result.description"
+                textWrap="true"
+              />
+            </StackLayout>
           </StackLayout>
-          <StackLayout :class="['back', { active: showBack[index] === true }]">
-            <Label
-              class="cardContent"
-              :text="result.description"
-              textWrap="true"
-            />
-          </StackLayout>
-        </StackLayout>
-      </card-view>
-    </v-template>
-  </ListView>
+        </card-view>
+      </v-template>
+    </ListView>
+  </StackLayout>
 </template>
 
 <script>
@@ -190,7 +207,7 @@ export default {
         false,
         false
       ],
-      error: false,
+      noFilms: false,
       results: Array
     };
   },
@@ -232,7 +249,11 @@ export default {
     });
   },
   mounted() {
-    this.requestImages();
+    if (this.unfilteredResults[6].length > 1) {
+      this.requestImages();
+    } else if (this.unfilteredResults[6].length === 0) {
+      this.noFilms = true;
+    }
   }
 };
 </script>
