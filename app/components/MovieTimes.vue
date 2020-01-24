@@ -8,6 +8,16 @@
         src="~/assets/images/home.png"
       />
       <Label class="title" text="Movie Times" />
+      <Label
+        v-if="noFilmsforCinema"
+        class="error"
+        text="I couldn't find any films for this cinema"
+      />
+      <Label
+        v-if="errorWithAPI"
+        class="error"
+        text="Our servers our down. We're working hard to get them running again"
+      />
       <ScrollView class="footer" orientation="horizontal" width="90%">
         <StackLayout orientation="horizontal" horizontalAlignment="center">
           <Label
@@ -107,7 +117,9 @@ export default {
       // Boolean for the styling/underlining of "Today"
       componentOpenedFirstTime: true,
       loading: true,
-      unfilteredResults: []
+      unfilteredResults: [],
+      noFilmsforCinema: false,
+      errorWithAPI: false
     };
   },
   methods: {
@@ -145,14 +157,14 @@ export default {
         .then(response => {
           this.loading = false;
           this.unfilteredResults = response.data;
-
           if (response.data.length > 0) {
             this.currentComponent = MoviesDay0;
+          } else if (reponse.data.length === 0) {
+            this.noFilmsforCinema = true;
           }
         })
         .catch(error => {
-          this.error = true;
-          console.log("Error with film times request");
+          this.errorWithAPI = true;
           this.loading = false;
         });
     },
@@ -230,5 +242,12 @@ Page {
   font-size: 15;
   font-family: Josefin Sans, sans-serif;
   text-align: center;
+}
+
+.error {
+  font-size: 15;
+  font-family: Josefin Sans, sans-serif;
+  text-align: center;
+  font-weight: bold;
 }
 </style>

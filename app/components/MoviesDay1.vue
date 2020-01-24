@@ -6,12 +6,12 @@
       class="error"
       text="Try a different day or another cinema"
     />
-
     <ListView
       ref="listView"
       v-if="results.length > 0"
       for="(result, index) in results"
       height="100%"
+      :key="counter + 1"
     >
       <v-template>
         <card-view
@@ -208,7 +208,8 @@ export default {
         false
       ],
       noFilms: false,
-      results: Array
+      results: Array,
+      counter: 0
     };
   },
   watch: {
