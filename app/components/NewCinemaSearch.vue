@@ -80,7 +80,7 @@ export default {
       axios
         .get(url, {
           params: {
-            searchInput: this.newLocation
+            searchInput: this.newLocation + " UK"
           }
         })
         .then(response => {

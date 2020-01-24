@@ -8,16 +8,6 @@
         src="~/assets/images/home.png"
       />
       <Label class="title" text="Movie Times" />
-      <Label
-        v-if="noFilmsforCinema"
-        class="error"
-        text="I couldn't find any films for this cinema"
-      />
-      <Label
-        v-if="errorWithAPI"
-        class="error"
-        text="Our servers our down. We're working hard to get them running again"
-      />
       <ScrollView class="footer" orientation="horizontal" width="90%">
         <StackLayout orientation="horizontal" horizontalAlignment="center">
           <Label
@@ -64,7 +54,16 @@
           />
         </StackLayout>
       </ScrollView>
-
+      <Label
+        v-if="noFilmsforCinema"
+        class="error"
+        text="I couldn't find any films for this cinema"
+      />
+      <Label
+        v-if="errorWithAPI"
+        class="error"
+        text="Our servers our down. We're working hard to get them running again"
+      />
       <Label
         class="cinema-name"
         :text="cinemaName"
