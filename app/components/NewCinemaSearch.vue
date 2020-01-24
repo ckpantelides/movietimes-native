@@ -11,7 +11,7 @@
       <SearchBar
         v-if="showSearchBar"
         hint="City, town or placename"
-        v-model="newLocation"
+        v-model="location"
         @submit="newSearch"
         height="30"
         class="search"
@@ -70,6 +70,7 @@ export default {
       cinemaID: String,
       results: [],
       loading: true,
+      location: "",
       showSearchBar: false,
       showSearchIcon: true,
       error: false
@@ -93,6 +94,23 @@ export default {
           this.error = true;
         });
     },
+    getNewCinemas(url) {
+      axios
+        .get(url, {
+          params: {
+            searchInput: this.location + " UK"
+          }
+        })
+        .then(response => {
+          this.results = response.data;
+          this.loading = false;
+          this.error = false;
+        })
+        .catch(error => {
+          this.loading = false;
+          this.error = true;
+        });
+    },
     // cinema data emitted to App.vue, so it can be used by MovieTimes
     cinemaChosen(cinema) {
       this.$emit("cinemaChosen", cinema);
@@ -100,7 +118,7 @@ export default {
     newSearch() {
       this.results = [];
       this.loading = true;
-      this.getCinemas(API);
+      this.getNewCinemas(API);
     },
     revealSearchBar() {
       this.showSearchBar = true;

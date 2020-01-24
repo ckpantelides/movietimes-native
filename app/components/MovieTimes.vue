@@ -55,19 +55,20 @@
         </StackLayout>
       </ScrollView>
       <Label
+        class="cinema-name"
+        :text="cinemaName"
+        horizontalAlignment="center"
+      />
+      <Label
         v-if="noFilmsforCinema"
         class="error"
         text="I couldn't find any films for this cinema"
       />
+      <Label v-if="errorWithAPI" class="error" text="Our servers our down" />
       <Label
         v-if="errorWithAPI"
         class="error"
-        text="Our servers our down. We're working hard to get them running again"
-      />
-      <Label
-        class="cinema-name"
-        :text="cinemaName"
-        horizontalAlignment="center"
+        text="We're working hard to get them running again"
       />
       <ActivityIndicator :busy="loading" height="20" />
       <component
