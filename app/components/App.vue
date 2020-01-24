@@ -3,7 +3,9 @@
     :is="currentComponent"
     @cinemaChosen="loadMovieTimes"
     @navigateHome="reloadCinemas"
+    @newCinemaSearch="newCinemaSearch"
     :IDtoSearch="cinemaIDprop"
+    :newLocation="newLocation"
     :cinemaName="cinemaNameProp"
   ></component>
 </template>
@@ -12,6 +14,7 @@
 import Vue from "nativescript-vue";
 import Cinemas from "../components/Cinemas.vue";
 import MovieTimes from "../components/MovieTimes.vue";
+import NewCinemaSearch from "../components/NewCinemaSearch.vue";
 
 // imported to access back Android backbutton
 import {
@@ -34,12 +37,15 @@ application.android.on(AndroidApplication.activityBackPressedEvent, data => {
 export default {
   name: "app",
   components: {
-    Cinemas
+    Cinemas,
+    MovieTimes,
+    NewCinemaSearch
   },
   data() {
     return {
       currentComponent: Cinemas,
       cinemaIDprop: String,
+      newLocation: String,
       cinemaNameProp: String
     };
   },
@@ -54,7 +60,7 @@ export default {
     },
     newCinemaSearch(data) {
       this.newLocation = data;
-      //  this.currentComponent = NewCinemaSearch;
+      this.currentComponent = NewCinemaSearch;
     }
   }
 };
