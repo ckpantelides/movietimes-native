@@ -12,7 +12,7 @@
         v-if="showSearchBar"
         hint="City, town or placename"
         v-model="location"
-        @submit="newSearch"
+        @submit="getNewCinemas"
         height="30"
         class="search"
       />
@@ -60,6 +60,9 @@ import Vue from "nativescript-vue";
 
 const API = "https://thelist-api.herokuapp.com/cinema-search";
 
+// appSettings will be used to cache results
+const appSettings = require("tns-core-modules/application-settings");
+
 export default {
   name: "NewCinemsSearch",
   props: {
@@ -81,11 +84,17 @@ export default {
       axios
         .get(url, {
           params: {
-            searchInput: this.newLocation + " UK"
+            searchInput: `${this.newLocation} UK`
           }
         })
         .then(response => {
           this.results = response.data;
+          appSettings.setString("cachedLocation", this.newLocation);
+          appSettings.setString(
+            "cachedNewSearchResults",
+            JSON.stringify(response.data)
+          );
+
           this.loading = false;
           this.error = false;
         })
@@ -94,15 +103,22 @@ export default {
           this.error = true;
         });
     },
-    getNewCinemas(url) {
+    getNewCinemas() {
+      this.results = [];
+      this.loading = true;
+      console.log("New search");
       axios
-        .get(url, {
+        .get(API, {
           params: {
-            searchInput: this.location + " UK"
+            searchInput: `${this.location} UK`
           }
         })
         .then(response => {
           this.results = response.data;
+          appSettings.setString(
+            "cachedNewSearchResults",
+            JSON.stringify(response.data)
+          );
           this.loading = false;
           this.error = false;
         })
@@ -115,18 +131,32 @@ export default {
     cinemaChosen(cinema) {
       this.$emit("cinemaChosen", cinema);
     },
-    newSearch() {
-      this.results = [];
-      this.loading = true;
-      this.getNewCinemas(API);
-    },
     revealSearchBar() {
       this.showSearchBar = true;
       this.showSearchIcon = false;
     }
   },
-  beforeMount() {
-    this.getCinemas(API);
+  mounted() {
+    let d = new Date();
+    let date = d.getDate() + "." + d.getMonth() + "." + d.getFullYear();
+
+    if (
+      this.newLocation == appSettings.getString("cachedLocation") &&
+      date == appSettings.getString("cachedNewSearchDate")
+    ) {
+      // use cache
+      this.results = JSON.parse(
+        appSettings.getString("cachedNewSearchResults")
+      );
+      this.loading = false;
+      console.log("Cache used");
+    } else {
+      // else perform axios request and set new values for cache
+      this.getCinemas(API);
+      console.log("New axios request");
+      this.secondSearch = false;
+      appSettings.setString("cachedNewSearchDate", date);
+    }
   }
 };
 </script>

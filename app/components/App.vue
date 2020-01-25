@@ -46,7 +46,8 @@ export default {
       currentComponent: Cinemas,
       cinemaIDprop: String,
       newLocation: String,
-      cinemaNameProp: String
+      cinemaNameProp: String,
+      homeAfterNewSearch: false
     };
   },
   methods: {
@@ -56,10 +57,13 @@ export default {
       this.currentComponent = MovieTimes;
     },
     reloadCinemas() {
-      this.currentComponent = Cinemas;
+      if (this.homeAfterNewSearch === true) {
+        this.currentComponent = NewCinemaSearch;
+      } else this.currentComponent = Cinemas;
     },
     newCinemaSearch(data) {
       this.newLocation = data;
+      this.homeAfterNewSearch = true;
       this.currentComponent = NewCinemaSearch;
     }
   }
