@@ -95,7 +95,6 @@ export default {
           this.error = false;
         })
         .catch(error => {
-          console.log(error);
           this.loading = false;
           this.error = true;
         });
@@ -115,7 +114,7 @@ export default {
   mounted() {
     let d = new Date();
     let date = d.getDate() + "." + d.getMonth() + "." + d.getFullYear();
-    console.log("Finding your location");
+    // console.log("Finding your location");
     geolocation
       .getCurrentLocation({
         // desiredAccuracy: Accuracy.high,
@@ -139,18 +138,18 @@ export default {
           // use cache if lat, lon and date match
           this.results = JSON.parse(appSettings.getString("cachedResults"));
           this.loading = false;
-          console.log("Cache used");
+         // console.log("Cache used");
         } else {
           // else perform axios request and set new values for cache
           this.getCinemas(API);
-          console.log("New axios request");
+        //  console.log("New axios request");
           appSettings.setString("cachedLat", res.latitude.toFixed(3));
           appSettings.setString("cachedLon", res.longitude.toFixed(3));
           appSettings.setString("cachedDate", date);
         }
       })
       .catch(e => {
-        console.log("Error finding your location", e);
+      //  console.log("Error finding your location", e);
         this.loading = false;
         this.error = true;
       });

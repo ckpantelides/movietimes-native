@@ -18,11 +18,7 @@
       />
       <label class="title" text="Cinemas" />
       <ActivityIndicator :busy="loading" height="20" />
-      <label
-        v-if="error"
-        class="error"
-        text="Sorry I couldn't find any cinemas"
-      />
+      <label v-if="error" class="error" text="Sorry I couldn't find any cinemas" />
       <label v-if="error" class="error" text="Try searching somewhere else" />
       <ListView for="result in results" height="100%">
         <v-template>
@@ -41,11 +37,7 @@
                 :text="`${result.address} ${result.postal_code}`"
                 textWrap="true"
               />
-              <label
-                class="footer"
-                :text="`${result._distance} km`"
-                textWrap="true"
-              />
+              <label class="footer" :text="`${result._distance} km`" textWrap="true" />
             </StackLayout>
           </card-view>
         </v-template>
@@ -106,7 +98,7 @@ export default {
     getNewCinemas() {
       this.results = [];
       this.loading = true;
-      console.log("New search");
+      //  console.log("New search");
       axios
         .get(API, {
           params: {
@@ -149,11 +141,11 @@ export default {
         appSettings.getString("cachedNewSearchResults")
       );
       this.loading = false;
-      console.log("Cache used");
+      // console.log("Cache used");
     } else {
       // else perform axios request and set new values for cache
       this.getCinemas(API);
-      console.log("New axios request");
+      //  console.log("New axios request");
       this.secondSearch = false;
       appSettings.setString("cachedNewSearchDate", date);
     }
