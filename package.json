@@ -1,7 +1,7 @@
 {
   "name": "movietimes-native",
-  "version": "1.0.0",
-  "description": "A native application built with NativeScript-Vue",
+  "version": "2.0.0",
+  "description": "Cinema and film-listings app",
   "author": "Christos Pantelides",
   "license": "MIT",
   "nativescript": {
