@@ -8,6 +8,7 @@ Movie Times app v2
 ===================
 
 The backend code used to handle queries for cinemas/movies is [here](https://github.com/ckpantelides/list-api)
+
 The backend code used to request the movies' posters - is [here](https://github.com/ckpantelides/movietime-server)
 
 #### A cinema and film listing app built with NativeScript-Vue
@@ -48,7 +49,7 @@ ndk {
 }
 
 I built an Android App Bundle using the NativeScript CLI:
-tns build android --release --key-store-path <path-to-your-keystore> --key-store-password <your-key-store-password> --key-store-alias <your-alias-name> --key-store-alias-password <your-alias-password> --aab --copy-to <aab-location>.aab
+```tns build android --release --key-store-path <path-to-your-keystore> --key-store-password <your-key-store-password> --key-store-alias <your-alias-name> --key-store-alias-password <your-alias-password> --aab --copy-to <aab-location>.aab```
 
 The NativeScript ID in the package.json has to be changed from the default first. Although I use Google Play to handle the private key for the app, I still had to use a .p12 file to complete the build above
 
