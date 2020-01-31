@@ -7,6 +7,8 @@
 Movie Times app v2
 ===================
 
+You can find the app on Google Play [here](https://play.google.com/store/apps/details?id=org.christos.cinemalistings&hl=en_GB)
+
 The backend code used to handle queries for cinemas/movies is [here](https://github.com/ckpantelides/list-api)
 
 The backend code used to request the movies' posters - is [here](https://github.com/ckpantelides/movietime-server)
